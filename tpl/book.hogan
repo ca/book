@@ -1,0 +1,34 @@
+<script id="book-tpl">
+    <figure class="book">
+        <ul class="hardcover_front">
+            <li>
+                <img src="img/{{coverArt}}" alt="" width="100%" height="100%">
+            </li>
+            <li></li>
+        </ul>
+        <ul class="page">
+            <li></li>
+            <li>
+                <a class="in-book"><img src="img/amazon.png" width="50" height="50"></img></a>
+                //put a link in here that says "wrong cover/data? Report book!"
+            </li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ul class="hardcover_back">
+            <li></li>
+            <li></li>
+        </ul>
+        <ul class="book_spine">
+            <li></li>
+            <li></li>
+        </ul>
+        <figcaption class="details">
+            <h1>{{title}}</h1>
+            <span>By {{author}}</span>
+            <p class="description">{{description}}</p>
+        </figcaption>
+    </figure>
+    <br><br><br>
+</script>

@@ -1,0 +1,127 @@
+<!-- 
+1. HTML/CSS Structure: Twitter Bootstrap
+2. HTML/CSS Templating: Hogan.js
+3. JS MVC Framework: Backbone.js
+4. Server Side: Node.js
+5. Database/Storage: MongoDB
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="assets/ico/favicon.png">
+
+    <title>Library &middot; Books</title>
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/typeahead.js-bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/book.css" />
+    <link href="css/jumbotron-narrow.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container-narrow">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">Library</h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1>Books</h1>
+        <p class="lead">Search a book. Add it to your collection.</p>
+        <div class="tt-container">
+            <input type="text" id="typeahead" class="typeahead tt-query" tabindex="1" placeholder="Search"></input>
+        </div>
+        <p><a id="add-book" class="btn btn-large btn-success add" tabindex="2" rel="popover">Add A Book</a></p>
+      </div>
+
+      <!-- Alert - should appear when book successfully added to database -->
+      <div class="alert alert-dismissable alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Success!</strong> Thanks for submitting that book.
+      </div>
+
+      <div class="row marketing"></div>
+
+      <div class="footer">
+        <p>&copy; Company 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="lib/underscore-min.js"> </script>
+    <script src="lib/backbone-min.js"> </script>
+    <script src="lib/bootstrap.js"></script>
+    <script src="lib/typeahead.js"></script>
+    <script src="lib/hogan.min.js"> </script>
+    <script>
+    //put this whole script into a file in js
+    $(document).ready(function () {
+        $('#typeahead').typeahead({
+            name: 'books',
+            prefetch: {
+                url: '/books.json',
+                ttl: 1,
+            },
+            limit: '5',
+            template: [ //Make this external? I don't know if it's worth it...
+                '<span class="book-name">{{title}}</span>',
+                '<em class="book-author">{{author}}</em>'
+            ].join(''),
+            valueKey: 'title',
+            engine: Hogan
+        }).on('typeahead:selected', function (e, datum) {
+            console.log(datum);
+            $.get('tpl/book.hogan', function(templates){
+                var extTemplate = $(templates).filter('#book-tpl').html();
+                var template = Hogan.compile(extTemplate);
+                var rendered = template.render(datum);
+                $('.marketing').append(rendered);
+            });
+            $('input').val('');
+        });
+        
+        $('#add-book').popover({
+            html: true,
+            placement: 'bottom',
+            title: 'Please enter book information.',
+            content: [ //possible to make this external?
+                '<form id="add-book">',
+                '<div class="input-group">',
+                '<span class="input-group-addon"><span class="glyphicon glyphicon-book"></span></span>',
+                '<input type="text" class="form-control" tabindex="3" placeholder="Title" id="book-title">',
+                '</div>',
+                '<div class="input-group author-input">',
+                '<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>',
+                '<input type="text" class="form-control" tabindex="4" placeholder="Author" id="book-author">',
+                '</div>',
+                '<div class="input-group author-input">',
+                '<span class="input-group-addon"><span class="glyphicon glyphicon-barcode"></span></span>',
+                '<input type="text" class="form-control" tabindex="5" placeholder="ISBN #" id="book-isbn">',
+                '<span class="input-group-addon"><a class="btn-tiny" id="submit-form"><span class="glyphicon glyphicon-arrow-right"><input type="submit"></input></span></a></span>', 
+                //shouldn't this all be wrapped in a form tag or something like that with a button that has some kind of submit value or something? Why can't I remember right now?
+                //On submit, check should be performed, maybe search internet for book, an image, using ISBN - if everything is found then submit it to the database I guess
+                '</div>',
+                '</form>'
+            ].join('')            
+        });
+    
+        $('#submit-form').on('click', function () { //NOT WORKING
+            console.warn('error');
+            $('.marketing').append('<div class="alert alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>Warning!</strong> Best check yo self, youre not looking too good.</div>')
+        });
+        
+        $('#submit-form').trigger('click');
+    });
+    </script>
+  </body>
+</html>
