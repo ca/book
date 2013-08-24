@@ -44,7 +44,7 @@
 
 .tt-suggestion p:hover {
     white-space: normal!important;
-    width: 250px; /* Get it to be the length of the string somehow */
+    width: 250px; /* Get it to be the length of the string somehow --- note i think we can ignore this comment now*/
 }
 
 .tt-suggestion.tt-is-under-cursor {
@@ -78,6 +78,7 @@
 }
 
 .typeahead {
+    width: 250px;
     padding: 8px 12px;
     line-height: 30px;
     border: 2px solid #ccc;
@@ -85,8 +86,13 @@
     -moz-border-radius: 8px;
     border-radius: 8px;
     outline: none;
+    -webkit-transition: width 2s;
+    -moz-transition: width 2s;
+    -o-transition: width 2s;
+    transition: width 2s;
 }
 
 .typeahead:focus {
     border: 2px solid #0097cf;
+    width: 400px;
 }
