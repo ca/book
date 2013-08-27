@@ -75,6 +75,7 @@
 
 .tt-hint {
     padding-left: 12px;
+    width: 400px;
 }
 
 .typeahead {
